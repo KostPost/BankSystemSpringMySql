@@ -12,17 +12,19 @@ import com.bank.bank_account.balanceHistoryRepository;
 @SpringBootApplication
 public class BankSystemSpringMySqlApplication {
 
-    public static void main(String[] args) { //qwe //zxc
+    public static void main(String[] args) {
 
         ConfigurableApplicationContext context = SpringApplication.run(BankSystemSpringMySqlApplication.class, args);
 
 
         MainController controller = context.getBean(MainController.class); //qwe //zxc
-//qwe
 
 
         controller.SeeBankAccounts(); //qwe
 
+
+
+        //piska
 
         context.close();
         SpringApplication.run(BankSystemSpringMySqlApplication.class, args);
