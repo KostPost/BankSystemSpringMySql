@@ -6,8 +6,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import com.bank.bank_account.bankAccountRepository;
 import com.bank.bank_account.bankAccount;
-import com.bank.bank_account.balanceHistory;
-import com.bank.bank_account.balanceHistoryRepository;
+import com.bank.bank_account.transactionRepository;
+import com.bank.bank_account.transactions;
+
+import java.util.List;
 
 @SpringBootApplication
 public class BankSystemSpringMySqlApplication {
@@ -19,12 +21,14 @@ public class BankSystemSpringMySqlApplication {
 
         MainController controller = context.getBean(MainController.class); //qwe //zxc
 
+//        List<bankAccount> all = controller.ReturnBankAccounts();
+//
+//        bankAccount c1 = all.get(0);
+//        bankAccount c2 = all.get(1);
+//
+//        controller.SendMoney(c1,c2,899);
 
-        controller.SeeBankAccounts(); //qwe
-
-
-
-        //piska
+        controller.SeeAllBankAccounts();
 
         context.close();
         SpringApplication.run(BankSystemSpringMySqlApplication.class, args);

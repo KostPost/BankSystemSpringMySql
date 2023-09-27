@@ -1,22 +1,20 @@
 package com.bank.bankSystemSpringMysql;
 
-import com.sun.tools.javac.Main;
+import com.bank.bank_account.transactions;
+import com.bank.bank_account.transactionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 
 import com.bank.bank_account.bankAccountRepository;
 import com.bank.bank_account.bankAccount;
-import com.bank.bank_account.balanceHistory;
-import com.bank.bank_account.balanceHistoryRepository;
+import com.bank.bank_account.transactionRepository;
+import com.bank.bank_account.transactions;
 
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Controller
@@ -24,16 +22,19 @@ import java.util.Optional;
 public class MainController {
 
     private final bankAccountRepository bankAccountRepository;
-    private final balanceHistoryRepository balanceHistoryRepository;
+    private final transactionRepository transactionRepository;
 
     @Autowired
-    public MainController(bankAccountRepository bankAccountRepository, balanceHistoryRepository balanceHistoryRepository){
+    public MainController(bankAccountRepository bankAccountRepository, transactionRepository transactionRepository){
         this.bankAccountRepository = bankAccountRepository;
-        this.balanceHistoryRepository = balanceHistoryRepository;
+        this.transactionRepository = transactionRepository;
     }
 
-    public void SeeBankAccounts(){
+    public List<bankAccount>ReturnBankAccounts(){
+        return bankAccountRepository.findAll();
+    }
 
+    public void SeeAllBankAccounts(){
         List<bankAccount> accounts = bankAccountRepository.findAll();
         for(bankAccount account : accounts)
         {
@@ -52,23 +53,47 @@ public class MainController {
         return bankAccountRepository.save(newBankAccount);
     }
 
+    public transactions NewBalance(@RequestBody transactions NewTransaction){
+        return transactionRepository.save(NewTransaction);
+    }
+
     public void SendMoney(bankAccount senderAccount, bankAccount recipientAccount, double transaction_amount){
 
-        senderAccount.MinusBalance(transaction_amount);
+        if(senderAccount.getAccount_balance() >= transaction_amount) {
+            double newSenderBalance, newRecipientBalance;
+            newSenderBalance = senderAccount.MinusBalance(transaction_amount);
+            newRecipientBalance = recipientAccount.PlusBalance(transaction_amount);
 
-        recipientAccount.PlusBalance(transaction_amount);
+            updateBankAccountBalance(senderAccount, newSenderBalance);
+            updateBankAccountBalance(recipientAccount, newRecipientBalance);
 
+            System.out.println("the transaction was successful");
+        }
+        else{
+            System.out.println("////////////////////////////////////");
+            System.out.println("FAIL");
+            System.out.println("Account - " + senderAccount.getAccount_name() + "  doesn't have enough money");
+            System.out.println("Need - " + transaction_amount + senderAccount.getAccount_name() + "\thave - " +
+                    senderAccount.getAccount_balance());
+            System.out.println("////////////////////////////////////");
+        }
     }
 
-    @Transactional
-    public Optional<bankAccount> update(int account_id, bankAccountRepository AccountChange) {
-        return bankAccountRepository.findById(account_id).map(target -> {
+    public bankAccount updateBankAccountBalance(bankAccount AccountToUpdate, double new_balance) {
 
-            target.PlusBalance(120);
+        bankAccount updatedAccount = bankAccountRepository.findById(AccountToUpdate.getAccount_id())
+                .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
 
-            return target; //qwe //qwe
-        });
+        updatedAccount.setAccount_balance(new_balance);
+
+        return bankAccountRepository.save(updatedAccount);
     }
+    public bankAccount bankAccountFindId(int id){
+        return bankAccountRepository.findById(id).orElse(null);
+    }
+
+
+
 
 
 }

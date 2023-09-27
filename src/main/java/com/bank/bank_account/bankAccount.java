@@ -37,12 +37,14 @@ public class bankAccount {
         }
     }
 
-    public void PlusBalance(double sum){
+    public double PlusBalance(double sum){
         account_balance += sum;
+        return account_balance;
     }
 
-    public void MinusBalance( double sum){
+    public double MinusBalance( double sum){
         account_balance -= sum;
+        return account_balance;
     }
 
 
