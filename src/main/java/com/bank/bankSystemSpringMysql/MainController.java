@@ -41,6 +41,31 @@ public class MainController {
             bankAccountPrint(account);
         }
     }
+
+    public void SeeAllTransaction(){
+        List<transactions> AllTransactions = transactionRepository.findAll();
+
+        for(transactions transaction : AllTransactions){
+            TransactionPrint(transaction);
+        }
+    }
+
+    public void TransactionPrint(transactions transaction){
+        System.out.println("////////////////////////////////////////////////////////////////");
+        System.out.println("Transaction data - " + transaction.getTransaction_data() + " ||| Transaction id - " + transaction.getTransaction_id() + " ||| Transaction sum - " + transaction.getTransaction_sum());
+        System.out.println("Sender - " + transaction.getSender() + " ||| id - " + transaction.getSender_id());
+        System.out.println("Sender balance before transaction - " + transaction.getSender_balance_before_transaction() + " ||| After - " +
+                transaction.getSender_balance_after_transaction());
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("Recipient - " + transaction.getRecipient() + " ||| id - " + transaction.getRecipient_id());
+        System.out.println("Recipient balance before transaction - " + transaction.getRecipient_balance_before_transaction() + " ||| After - " +
+                transaction.getRecipient_balance_after_transaction());
+        System.out.println("////////////////////////////////////////////////////////////////\n");
+
+
+    }
+
+
     public void bankAccountPrint(bankAccount accountPrint){
         System.out.println("\naccount id - " + accountPrint.getAccount_id());
         System.out.println("account name - " + accountPrint.getAccount_name());
@@ -53,19 +78,36 @@ public class MainController {
         return bankAccountRepository.save(newBankAccount);
     }
 
-    public transactions NewBalance(@RequestBody transactions NewTransaction){
+    public transactions AddNewTransaction(@RequestBody transactions NewTransaction){
         return transactionRepository.save(NewTransaction);
     }
 
-    public void SendMoney(bankAccount senderAccount, bankAccount recipientAccount, double transaction_amount){
+    public void SendMoney(bankAccount senderAccount, bankAccount recipientAccount, double transaction_sum){
 
-        if(senderAccount.getAccount_balance() >= transaction_amount) {
+        if(senderAccount.getAccount_balance() >= transaction_sum) {
+
+            transactions NewTransaction = new transactions();
+
+            NewTransaction.setTransaction_sum(transaction_sum);
+            NewTransaction.setSender(senderAccount.getAccount_name());
+            NewTransaction.setSender_id(senderAccount.getAccount_id());
+            NewTransaction.setSender_balance_before_transaction(senderAccount.getAccount_balance());
+
+            NewTransaction.setRecipient(recipientAccount.getAccount_name());
+            NewTransaction.setRecipient_id(recipientAccount.getAccount_id());
+            NewTransaction.setRecipient_balance_before_transaction(recipientAccount.getAccount_balance());
+
             double newSenderBalance, newRecipientBalance;
-            newSenderBalance = senderAccount.MinusBalance(transaction_amount);
-            newRecipientBalance = recipientAccount.PlusBalance(transaction_amount);
+            newSenderBalance = senderAccount.MinusBalance(transaction_sum);
+            newRecipientBalance = recipientAccount.PlusBalance(transaction_sum);
 
             updateBankAccountBalance(senderAccount, newSenderBalance);
             updateBankAccountBalance(recipientAccount, newRecipientBalance);
+
+            NewTransaction.setSender_balance_after_transaction(senderAccount.getAccount_balance());
+            NewTransaction.setRecipient_balance_after_transaction(recipientAccount.getAccount_balance());
+
+            AddNewTransaction(NewTransaction);
 
             System.out.println("the transaction was successful");
         }
@@ -73,7 +115,7 @@ public class MainController {
             System.out.println("////////////////////////////////////");
             System.out.println("FAIL");
             System.out.println("Account - " + senderAccount.getAccount_name() + "  doesn't have enough money");
-            System.out.println("Need - " + transaction_amount + senderAccount.getAccount_name() + "\thave - " +
+            System.out.println("Need - " + transaction_sum + senderAccount.getAccount_name() + "\thave - " +
                     senderAccount.getAccount_balance());
             System.out.println("////////////////////////////////////");
         }
@@ -90,6 +132,10 @@ public class MainController {
     }
     public bankAccount bankAccountFindId(int id){
         return bankAccountRepository.findById(id).orElse(null);
+    }
+
+    public transactions transactionFindId(int id){
+        return transactionRepository.findById(id).orElse(null);
     }
 
 

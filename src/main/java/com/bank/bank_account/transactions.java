@@ -19,8 +19,11 @@ public class transactions {
     @Column(name = "operation_id")
     private int transaction_id;
 
+    @Column(name = "transaction_sum")
+    private double transaction_sum;
+
     @Column(name = "sender")
-    private int sender;
+    private String sender;
     @Column(name = "sender_id")
     private int sender_id;
     @Column(name = "sender_balance_before_operation")
@@ -29,7 +32,7 @@ public class transactions {
     private double sender_balance_after_transaction;
 
     @Column(name = "recipient")
-    private int recipient;
+    private String recipient;
     @Column(name = "recipient_id")
     private int recipient_id;
     @Column(name = "recipient_balance_before_operation")
@@ -38,12 +41,12 @@ public class transactions {
     private double recipient_balance_after_transaction;
 
     @Column(name = "account_creation_date")
-    private LocalDate operation_data = null;
+    private LocalDate transaction_data = null;
 
     public transactions(){
 
-        if(operation_data == null){
-            operation_data = LocalDate.now();
+        if(transaction_data == null){
+            transaction_data = LocalDate.now();
         }
 
     }

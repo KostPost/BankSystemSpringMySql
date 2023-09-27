@@ -17,8 +17,6 @@ public class BankSystemSpringMySqlApplication {
     public static void main(String[] args) {
 
         ConfigurableApplicationContext context = SpringApplication.run(BankSystemSpringMySqlApplication.class, args);
-
-
         MainController controller = context.getBean(MainController.class); //qwe //zxc
 
 //        List<bankAccount> all = controller.ReturnBankAccounts();
@@ -26,9 +24,12 @@ public class BankSystemSpringMySqlApplication {
 //        bankAccount c1 = all.get(0);
 //        bankAccount c2 = all.get(1);
 //
-//        controller.SendMoney(c1,c2,899);
+//        controller.SendMoney(c1,c2,7);
+//
+//        controller.SeeAllBankAccounts();
 
-        controller.SeeAllBankAccounts();
+        controller.SeeAllTransaction();
+        controller.SeeAllTransaction();
 
         context.close();
         SpringApplication.run(BankSystemSpringMySqlApplication.class, args);
