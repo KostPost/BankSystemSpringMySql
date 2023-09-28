@@ -141,11 +141,11 @@ public class MainController {
         return transactionRepository.findById(id).orElse(null);
     }
 
-    public List<transactions> findBySender(@RequestParam String FirstName) {
+    public List<transactions> transactionFindBySender(@RequestParam String FirstName) {
         return transactionRepository.findBySender(FirstName);
     }
 
-    public List<transactions> findByRecipient(@RequestParam String FirstName) {
+    public List<transactions> transactionFindByRecipient(@RequestParam String FirstName) {
         return transactionRepository.findByRecipient(FirstName);
     }
 

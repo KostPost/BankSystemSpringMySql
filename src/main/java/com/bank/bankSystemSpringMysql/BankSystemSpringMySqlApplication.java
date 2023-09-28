@@ -32,7 +32,7 @@ public class BankSystemSpringMySqlApplication {
         do {
 
             System.out.println("Choice action: \n" +
-                    "1 - See all accounts\n2 - Create account\n3 - Log in\n4 - Find transaction");
+                    "1 - See all accounts\n2 - Create account\n3 - Log in\n4 - Change account balance\n5 - Find transaction");
             action = askAction.nextInt();
 
 
@@ -131,22 +131,99 @@ public class BankSystemSpringMySqlApplication {
 
                 }
 
-                case 4 ->{
+                case 4 -> {
+                    Scanner FindAccountById = new Scanner(System.in);
+                    int idToFind = 0;
+
+                    do{
+                        System.out.println("Enter account id:");
+                        idToFind = FindAccountById.nextInt();
+
+                        bankAccount selectedAccount = controller.bankAccountFindId(idToFind);
+
+                        if(selectedAccount != null){
+
+                            controller.bankAccountPrint(selectedAccount);
+
+
+                            int whatToDoBalance;
+
+                        }
+
+
+                    }while(true);
+                }
+
+                case 5 ->{
 
                     int FindBy;
                     Scanner FindTransactionBy = new Scanner(System.in);
 
                     do{
-                        System.out.println("1 - Find by id\n2 - Find by sender\n3 - Find recipient");
+                        System.out.println("1 - Find by id\n2 - Find by sender\n3 - Find recipient\b4 - back");
                         FindBy = FindTransactionBy.nextInt();
 
 
                         switch (FindBy){
 
                             case 1 ->{
-                                Scanner AskDataForFind = new Scanner(System.in)
+                                Scanner AskDataForFind = new Scanner(System.in);
+                                int idToFind;
+
+                                System.out.println("Enter id transaction");
+                                idToFind = AskDataForFind.nextInt();
+
+                                transactions transaction = controller.transactionFindId(idToFind);
+
+                                if(transaction != null){
+                                    controller.transactionPrint(transaction);
+                                }
+                                else{
+                                    System.out.println("Transaction with id " + idToFind + " not found");
+                                }
                             }
 
+                            case 2 ->{
+                                Scanner AskDataTransaction = new Scanner(System.in);
+                                String senderToFind;
+
+                                System.out.println("Enter sender");
+                                senderToFind = AskDataTransaction.next();
+
+                                List<transactions> foundedTransaction = controller.transactionFindBySender(senderToFind);
+
+                                if(foundedTransaction != null){
+                                    for(transactions transactionToPrint : foundedTransaction){
+                                        controller.transactionPrint(transactionToPrint);
+                                    }
+                                }
+                                else{
+                                    System.out.println("Transaction with id not found");
+                                }
+                            }
+
+                            case 3 ->{
+                                Scanner AskDataTransaction = new Scanner(System.in);
+                                String receptionToFind;
+
+                                System.out.println("Enter sender");
+                                receptionToFind = AskDataTransaction.next();
+
+                                List<transactions> foundedTransaction = controller.transactionFindByRecipient(receptionToFind);
+
+                                if(foundedTransaction != null){
+                                    for(transactions transactionToPrint : foundedTransaction){
+                                        controller.transactionPrint(transactionToPrint);
+                                    }
+                                }
+                                else{
+                                    System.out.println("Transaction with id not found");
+                                }
+                            }
+
+                            case 4 -> {
+                                break;
+                            }
 
                         }
 
