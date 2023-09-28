@@ -9,10 +9,9 @@ import org.springframework.stereotype.Controller;
 
 import com.bank.bank_account.bankAccountRepository;
 import com.bank.bank_account.bankAccount;
-import com.bank.bank_account.transactionRepository;
-import com.bank.bank_account.transactions;
 
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -46,11 +45,11 @@ public class MainController {
         List<transactions> AllTransactions = transactionRepository.findAll();
 
         for(transactions transaction : AllTransactions){
-            TransactionPrint(transaction);
+            transactionPrint(transaction);
         }
     }
 
-    public void TransactionPrint(transactions transaction){
+    public void transactionPrint(transactions transaction){
         System.out.println("////////////////////////////////////////////////////////////////");
         System.out.println("Transaction data - " + transaction.getTransaction_data() + " ||| Transaction id - " + transaction.getTransaction_id() + " ||| Transaction sum - " + transaction.getTransaction_sum());
         System.out.println("Sender - " + transaction.getSender() + " ||| id - " + transaction.getSender_id());
@@ -68,8 +67,8 @@ public class MainController {
 
     public void bankAccountPrint(bankAccount accountPrint){
         System.out.println("\naccount id - " + accountPrint.getAccount_id());
-        System.out.println("account name - " + accountPrint.getAccount_name());
-        System.out.println("account password - " + accountPrint.getAccount_password());
+        System.out.println("account name - " + accountPrint.getAccountName());
+        System.out.println("account password - " + accountPrint.getAccountPassword());
         System.out.println("account balance - " + accountPrint.getAccount_balance());
         System.out.println("account creation date - " + accountPrint.getAccount_creation_date());
     }
@@ -89,11 +88,11 @@ public class MainController {
             transactions NewTransaction = new transactions();
 
             NewTransaction.setTransaction_sum(transaction_sum);
-            NewTransaction.setSender(senderAccount.getAccount_name());
+            NewTransaction.setSender(senderAccount.getAccountName());
             NewTransaction.setSender_id(senderAccount.getAccount_id());
             NewTransaction.setSender_balance_before_transaction(senderAccount.getAccount_balance());
 
-            NewTransaction.setRecipient(recipientAccount.getAccount_name());
+            NewTransaction.setRecipient(recipientAccount.getAccountName());
             NewTransaction.setRecipient_id(recipientAccount.getAccount_id());
             NewTransaction.setRecipient_balance_before_transaction(recipientAccount.getAccount_balance());
 
@@ -114,8 +113,8 @@ public class MainController {
         else{
             System.out.println("////////////////////////////////////");
             System.out.println("FAIL");
-            System.out.println("Account - " + senderAccount.getAccount_name() + "  doesn't have enough money");
-            System.out.println("Need - " + transaction_sum + senderAccount.getAccount_name() + "\thave - " +
+            System.out.println("Account - " + senderAccount.getAccountName() + "  doesn't have enough money");
+            System.out.println("Need - " + transaction_sum + senderAccount.getAccountName() + "\thave - " +
                     senderAccount.getAccount_balance());
             System.out.println("////////////////////////////////////");
         }
@@ -134,12 +133,20 @@ public class MainController {
         return bankAccountRepository.findById(id).orElse(null);
     }
 
+    public bankAccount findByAccountName(@RequestParam String AccountName) {
+        return bankAccountRepository.findByAccountName(AccountName);
+    }
+
     public transactions transactionFindId(int id){
         return transactionRepository.findById(id).orElse(null);
     }
 
+    public List<transactions> findBySender(@RequestParam String FirstName) {
+        return transactionRepository.findBySender(FirstName);
+    }
 
-
-
+    public List<transactions> findByRecipient(@RequestParam String FirstName) {
+        return transactionRepository.findByRecipient(FirstName);
+    }
 
 }

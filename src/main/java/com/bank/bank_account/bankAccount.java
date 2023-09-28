@@ -1,7 +1,7 @@
 package com.bank.bank_account;
 
 import java.time.LocalDate;
-import java.util.Date;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,10 +20,10 @@ public class bankAccount {
     private int account_id;
 
     @Column(name = "account_name")
-    private String account_name;
+    private String accountName;
 
     @Column(name = "account_password")
-    private String account_password;
+    private String accountPassword;
 
     @Column(name = "account_balance")
     private double account_balance;

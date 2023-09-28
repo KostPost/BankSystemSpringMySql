@@ -5,6 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface bankAccountRepository extends JpaRepository<bankAccount, Integer> {
-
-
+    bankAccount findByAccountName(String AccName);
 }
